@@ -2,33 +2,55 @@ import argparse
 import json
 import sys
 import random
-parser = argparse.ArgumentParser()
-parser.add_argument('--model', type = str, help = "place where analise is written")
-parser.add_argument('--seed', type = str, default = None, help = 'first_word')
-parser.add_argument('--length', type = int, help = 'how many words should be generated')
-parser.add_argument('--output', type = str, default = None, help = 'output file')
-args = parser.parse_args()
-input = open(args.model, "r")
-output = sys.stdout
-if(args.output != None):
-	output = open(args.output, "w")
+import numpy
+import re
+from collections import defaultdict
+
+
 def main_generator(count, length):
-	q = json.load(input)
-	if count == None:
-		count = random.choice(list(q.keys()))
-	for index in range(length):
-		mas = []
-		if(len(q) == 0):
-			count = random.choice(list(q.keys))
-		else:
-			for i in q[count]:
-				f = i
-				for z in range(q[count][f]):
-					mas.append(f)
-			count = random.choice(mas)
-		output.write(count + ' ')
-main_generator(args.seed, args.length)
-print()
+    """
+    Функция, которая на вход получает первое слово, если оно есть,
+    и длину последовательности, на основе этого генерирует
+    последовательность следующим образом
+    берет слово, смотрит на все возможные последующие
+    и выбирает с помощью вероятности каждого из них
+
+    count: Первое слово
+    length: длина генерируемого текста
+    possibility: вероятность слова идти после данного
+    dictn: словарь, в котором все хранится
+    mas: массив в котором хранятся слова, идущие после данного
+    """
+    dictn = json.load(input)
+    if count is None:
+        count = random.choice(list(dictn.keys()))
+    for index in range(length):
+        output.write(count + ' ')
+        mas = []
+        possibility = []
+        for i in (list(dictn[count].keys())):
+            mas.append(i)
+            possibility.append(dictn[count][i])
+        tmp_sum = sum(possibility)
+        for i in range(len(possibility)):
+            possibility[i] = possibility[i]/tmp_sum
+        count = numpy.random.choice(mas, p=possibility)
+    output.write('\n')
 
 
-
+if(__name__ == "__main__"):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--model', type=str,
+                        help="place where analise is written")
+    parser.add_argument('--seed', type=str, default=None, help='first_word')
+    parser.add_argument('--length', type=int,
+                        help='how many words should be generated')
+    parser.add_argument('--output', type=str, default=None, help='output file')
+    args = parser.parse_args()
+    input = open(args.model, "r")
+    output = sys.stdout
+    if(args.output is not None):
+        output = open(args.output, "w")
+    main_generator(args.seed, args.length)
+    input.close()
+    output.close()
