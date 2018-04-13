@@ -26,15 +26,13 @@ def main_generator(count, length):
         count = random.choice(list(dictn.keys()))
     for index in range(length):
         output.write(count + ' ')
-        mas = []
         possibility = []
         for i in (list(dictn[count].keys())):
-            mas.append(i)
             possibility.append(dictn[count][i])
         tmp_sum = sum(possibility)
         for i in range(len(possibility)):
             possibility[i] = possibility[i]/tmp_sum
-        count = numpy.random.choice(mas, p=possibility)
+        count = numpy.random.choice(list(dictn[count].keys()), p=possibility)
     output.write('\n')
 
 
