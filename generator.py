@@ -39,10 +39,12 @@ def main_generator(count, length):
 if(__name__ == "__main__"):
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str,
-                        help="place where analise is written")
+                        help="place where analise is written",
+                        required=True)
     parser.add_argument('--seed', type=str, default=None, help='first_word')
     parser.add_argument('--length', type=int,
-                        help='how many words should be generated')
+                        help='how many words should be generated',
+                        required=True)
     parser.add_argument('--output', type=str, default=None, help='output file')
     args = parser.parse_args()
     input = open(args.model, "r")

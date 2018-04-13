@@ -30,7 +30,8 @@ def main_action(is_lower):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str,
-                        help="place where analise is written")
+                        help="place where analise is written",
+                        required=True)
     parser.add_argument('--i', '--input-dir', type=str,
                         default=None,
                         help="source of data")
@@ -38,7 +39,6 @@ if __name__ == "__main__":
                         default=False,
                         help='going to lowercase')
     args = parser.parse_args()
-    print(args.model)
     input = sys.stdin
     if(args.i is not None):
         input = open(args.i, "r")
