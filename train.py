@@ -12,18 +12,20 @@ def main_action(is_lower):
     dictn: Словарь, который мы и запишем в файл
     words: Список слов в данной строке
     is_lower: флажок, показывающий нужно ли приводить к lowercase
+    last_word_of_last_line: последнее слово в предыдущей строке
     """
     dictn = defaultdict(lambda: defaultdict(int))
+    last_word_of_last_line = ""
     for line in input:
         if is_lower is True:
             line = line.lower()
-        words = [""]
+        words = [last_word_of_last_line]
         words += re.findall(r"\w+", line)
-        words.append("")
         for i in range(len(words) - 1):
             first_word = words[i]
             second_word = words[i+1]
             dictn[first_word][second_word] += 1
+        last_word_of_last_line = words[-1]
     json.dump(dictn, output)
 
 
