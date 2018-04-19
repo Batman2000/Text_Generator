@@ -40,12 +40,12 @@ if __name__ == "__main__":
                         help='going to lowercase')
     args = parser.parse_args()
     input = sys.stdin
-    if(args.i is not None):
+    if args.i is not None:
         input = open(args.i, "r")
     output = open(args.model, "w")
-    t = False
-    if(args.lc is not False):
-        t = True
-    main_action(t)
+    is_lower = False
+    if args.lc is not False:
+        is_lower = True
+    main_action(is_lower)
     input.close()
     output.close()

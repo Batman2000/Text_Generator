@@ -26,17 +26,15 @@ def main_generator(count, length):
         count = random.choice(list(dictn.keys()))
     for index in range(length):
         output.write(count + ' ')
-        possibility = []
-        for i in (list(dictn[count].keys())):
-            possibility.append(dictn[count][i])
-        tmp_sum = sum(possibility)
+        possibility = list(dictn[count].values())
+        possibility_sum = sum(possibility)
         for i in range(len(possibility)):
-            possibility[i] = possibility[i]/tmp_sum
+            possibility[i] = possibility[i]/possibility_sum
         count = numpy.random.choice(list(dictn[count].keys()), p=possibility)
     output.write('\n')
 
 
-if(__name__ == "__main__"):
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str,
                         help="place where analise is written",
@@ -49,7 +47,7 @@ if(__name__ == "__main__"):
     args = parser.parse_args()
     input = open(args.model, "r")
     output = sys.stdout
-    if(args.output is not None):
+    if args.output is not None:
         output = open(args.output, "w")
     main_generator(args.seed, args.length)
     input.close()
