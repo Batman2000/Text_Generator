@@ -5,16 +5,15 @@ import re
 from collections import defaultdict
 
 
-def main_action(is_lower):
+def writinig_text_into_file(is_lower):
     """
-    Функция, записывающая весь текст в виде словаря из словарей
+    Функция, записывающая весь текст в виде словаря из словарей в нужный файл,
+     при этом приводя к нижнему регистру при необходимости
 
-    dictn: Словарь, который мы и запишем в файл
-    words: Список слов в данной строке
     is_lower: флажок, показывающий нужно ли приводить к lowercase
-    last_word_of_last_line: последнее слово в предыдущей строке
     """
-    dictn = defaultdict(lambda: defaultdict(int))
+    dictionary_with_model_of_my_text = defaultdict(
+        lambda: defaultdict(int))
     last_word_of_last_line = ""
     for line in input:
         if is_lower is True:
@@ -24,9 +23,9 @@ def main_action(is_lower):
         for i in range(len(words) - 1):
             first_word = words[i]
             second_word = words[i+1]
-            dictn[first_word][second_word] += 1
+            dictionary_with_model_of_my_text[first_word][second_word] += 1
         last_word_of_last_line = words[-1]
-    json.dump(dictn, output)
+    json.dump(dictionary_with_model_of_my_text, output)
 
 
 if __name__ == "__main__":
@@ -48,6 +47,6 @@ if __name__ == "__main__":
     is_lower = False
     if args.lc is not False:
         is_lower = True
-    main_action(is_lower)
+    writinig_text_into_file(is_lower)
     input.close()
     output.close()
