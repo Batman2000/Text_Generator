@@ -5,10 +5,11 @@ import re
 from collections import defaultdict
 
 
-def writinig_text_into_file(is_lower):
+def writinig_model_of_text_into_file(is_lower):
     """
-    Функция, записывающая весь текст в виде словаря из словарей в нужный файл,
-     при этом приводя к нижнему регистру при необходимости
+    Функция, записывающая модель текста в виде словаря из словарей в
+    нужный файл,
+    при этом приводя к нижнему регистру при необходимости
 
     is_lower: флажок, показывающий нужно ли приводить к lowercase
     """
@@ -21,9 +22,7 @@ def writinig_text_into_file(is_lower):
         words = [last_word_of_last_line]
         words += re.findall(r"\w+", line)
         for i in range(len(words) - 1):
-            first_word = words[i]
-            second_word = words[i+1]
-            dictionary_with_model_of_my_text[first_word][second_word] += 1
+            dictionary_with_model_of_my_text[words[i]][words[i+1]] += 1
         last_word_of_last_line = words[-1]
     json.dump(dictionary_with_model_of_my_text, output)
 
@@ -40,13 +39,15 @@ if __name__ == "__main__":
                         default=False,
                         help='going to lowercase')
     args = parser.parse_args()
-    input = sys.stdin
     if args.i is not None:
         input = open(args.i, "r")
+    else:
+        input = sys.stdin
     output = open(args.model, "w")
-    is_lower = False
     if args.lc is not False:
         is_lower = True
-    writinig_text_into_file(is_lower)
+    else:
+        is_lower = False
+    writinig_model_of_text_into_file(is_lower)
     input.close()
     output.close()

@@ -7,7 +7,13 @@ import re
 from collections import defaultdict
 
 
-def generating_text(first_word, length, max_symbols_of_one_paragraph=300):
+def loading_model_from_file():
+    dictionary_with_model_of_my_text = json.load(input)
+    return dictionary_with_model_of_my_text
+
+
+def generating_text(dictionary_with_model_of_my_text, first_word, length,
+                    max_symbols_of_one_paragraph=300):
     """
     Функция, которая на вход получает первое слово, если оно есть,
     и длину последовательности, на основе этого генерирует
@@ -19,8 +25,8 @@ def generating_text(first_word, length, max_symbols_of_one_paragraph=300):
     length: длина генерируемого текста
     max_symbols_of_one_paragraph: максимальное количество символов
     в одном абзаце
+    dictionary_with_model_of_my_text: словарь с моделью данного текста
     """
-    dictionary_with_model_of_my_text = json.load(input)
     text = ''
     if first_word is None:
         first_word = random.choice(
@@ -62,11 +68,17 @@ if __name__ == "__main__":
                         help="maximum number of symbols in one paragraph",
                         default=300
                         )
+
     args = parser.parse_args()
+
     input = open(args.model, "r")
-    output = sys.stdout
+
     if args.output is not None:
         output = open(args.output, "w")
-    generating_text(args.seed, args.length)
+    else:
+        output = sys.stdout
+    dictionary_with_model_of_my_text = loading_model_from_file()
+    generating_text(dictionary_with_model_of_my_text, args.seed, args.length,
+                    args.max_asymbols)
     input.close()
     output.close()
