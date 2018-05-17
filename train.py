@@ -37,14 +37,14 @@ if __name__ == "__main__":
     parser.add_argument('--model', type=str,
                         help="place where analise is written",
                         required=True)
-    parser.add_argument('--i', '--input-dir', type=str,
-                        default=None,
+    parser.add_argument('--i', dest='inp', default=sys.stdin,
+                        type=argparse.FileType('r', encoding='utf8'),
                         help="source of data")
     parser.add_argument('--lc', action='store_true',
                         default=False,
                         help='going to lowercase')
     args = parser.parse_args()
-    input = sys.stdin if args.i is None else open(args.i, "r")
+    input = args.inp
     output = open(args.model, "w")
     writinig_model_of_text_into_file(args.lc)
     input.close()
