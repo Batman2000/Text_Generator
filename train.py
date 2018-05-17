@@ -46,7 +46,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     input = sys.stdin if args.i is None else open(args.i, "r")
     output = open(args.model, "w")
-    is_lower = args.lc
-    writinig_model_of_text_into_file(is_lower)
+    writinig_model_of_text_into_file(args.lc)
     input.close()
     output.close()
