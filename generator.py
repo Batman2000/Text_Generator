@@ -60,18 +60,16 @@ if __name__ == "__main__":
     parser.add_argument('--length', type=int,
                         help='how many words should be generated',
                         required=True)
-    parser.add_argument('--output', default=sys.stdout, dest='out',
-                        type=argparse.FileType('w', encoding='utf8'),
+    parser.add_argument('--output', type=str, default=None,
                         help='output file')
     parser.add_argument("--max-words", type=int,
                         help="maximum number of words in one paragraph",
                         default=100
                         )
-
     args = parser.parse_args()
 
     input = open(args.model, "r")
-    output = args.out
+    output = sys.stdout if args.output is None else open(args.output, "w")
     dict_with_model_of_my_text = loading_model_from_file()
     generating_text(dict_with_model_of_my_text, args.seed, args.length,
                     args.max_words)
