@@ -13,7 +13,7 @@ def writinig_model_of_text_into_file(is_lower):
 
     is_lower: флажок, показывающий нужно ли приводить к lowercase
     """
-    dictionary_with_model_of_my_text = defaultdict(
+    dict_with_model_of_my_text = defaultdict(
         lambda: defaultdict(int))
     last_word_of_last_line = ""
     for line in input:
@@ -22,9 +22,14 @@ def writinig_model_of_text_into_file(is_lower):
         words = [last_word_of_last_line]
         words += re.findall(r"\w+", line)
         for i in range(len(words) - 1):
-            dictionary_with_model_of_my_text[words[i]][words[i+1]] += 1
+            dict_with_model_of_my_text[words[i]][words[i+1]] += 1
         last_word_of_last_line = words[-1]
-    json.dump(dictionary_with_model_of_my_text, output)
+    for word in list(dict_with_model_of_my_text.keys()):
+        words_occurrence_sum = sum(list(
+            dict_with_model_of_my_text[word].values()))
+        for next_word in dict_with_model_of_my_text[word].keys():
+            dict_with_model_of_my_text[word][next_word] /= words_occurrence_sum
+    json.dump(dict_with_model_of_my_text, output)
 
 
 if __name__ == "__main__":
@@ -39,15 +44,9 @@ if __name__ == "__main__":
                         default=False,
                         help='going to lowercase')
     args = parser.parse_args()
-    if args.i is not None:
-        input = open(args.i, "r")
-    else:
-        input = sys.stdin
+    input = sys.stdin if args.i is None else open(args.i, "r")
     output = open(args.model, "w")
-    if args.lc is not False:
-        is_lower = True
-    else:
-        is_lower = False
+    is_lower = args.lc
     writinig_model_of_text_into_file(is_lower)
     input.close()
     output.close()

@@ -8,12 +8,12 @@ from collections import defaultdict
 
 
 def loading_model_from_file():
-    dictionary_with_model_of_my_text = json.load(input)
-    return dictionary_with_model_of_my_text
+    dict_with_model_of_my_text = json.load(input)
+    return dict_with_model_of_my_text
 
 
-def generating_text(dictionary_with_model_of_my_text, first_word, length,
-                    max_symbols_of_one_paragraph=300):
+def generating_text(dict_with_model_of_my_text, first_word, length,
+                    max_amount_of_words_in_one_paragraph=100):
     """
     Функция, которая на вход получает первое слово, если оно есть,
     и длину последовательности, на основе этого генерирует
@@ -23,35 +23,32 @@ def generating_text(dictionary_with_model_of_my_text, first_word, length,
 
     first_word: Первое слово
     length: длина генерируемого текста
-    max_symbols_of_one_paragraph: максимальное количество символов
+    max_amount_of_words_in_one_paragraph: максимальное количество слов
     в одном абзаце
-    dictionary_with_model_of_my_text: словарь с моделью данного текста
+    dict_with_model_of_my_text: словарь с моделью данного текста
     """
-    text = ''
+    words_list = []
     if first_word is None:
         first_word = random.choice(
-            list(dictionary_with_model_of_my_text.keys()))
+            list(dict_with_model_of_my_text.keys()))
+    current_word = first_word
     for index in range(length):
-        text += first_word + ' '
-        possibility = list(
-            dictionary_with_model_of_my_text[first_word].values())
-        possibility_sum = sum(possibility)
-        for i in range(len(possibility)):
-            possibility[i] = possibility[i]/possibility_sum
-        first_word = numpy.random.choice(
-            list(dictionary_with_model_of_my_text[first_word].keys()),
-            p=possibility)
-        if len(text) >= max_symbols_of_one_paragraph:
+        words_list.append(current_word)
+        current_word = numpy.random.choice(
+            list(dict_with_model_of_my_text[current_word].keys()),
+            p=list(dict_with_model_of_my_text[current_word].values()))
+        if len(words_list) >= max_amount_of_words_in_one_paragraph:
+            text = ' '.join(words_list) + ' '
             output.write(text + '\n')
-            text = ''
+            words_list = []
         """
         Переменная text содержит в себе абзац, который был сгенерирован
         на данный момент.
-        В случае, если количество символов превысит максимально допустимое
-        (max_symbols_of_one_paragraph), мы выводим наш абзац,
-        обнуляем text и начинаем генерацию нового, в случае необходимости
+        В случае, если количество слов превысит максимально допустимое
+        (max_amount_of_words_in_one_paragraph), мы выводим наш абзац
+        и начинаем генерацию нового, в случае необходимости
         """
-    output.write(text + '\n')
+    output.write(' '.join(words_list) + ' ' + '\n')
 
 
 if __name__ == "__main__":
@@ -64,21 +61,17 @@ if __name__ == "__main__":
                         help='how many words should be generated',
                         required=True)
     parser.add_argument('--output', type=str, default=None, help='output file')
-    parser.add_argument("--max-symbols", type=int,
-                        help="maximum number of symbols in one paragraph",
-                        default=300
+    parser.add_argument("--max-words", type=int,
+                        help="maximum number of words in one paragraph",
+                        default=100
                         )
 
     args = parser.parse_args()
 
     input = open(args.model, "r")
-
-    if args.output is not None:
-        output = open(args.output, "w")
-    else:
-        output = sys.stdout
-    dictionary_with_model_of_my_text = loading_model_from_file()
-    generating_text(dictionary_with_model_of_my_text, args.seed, args.length,
-                    args.max_asymbols)
+    output = sys.stdout if args.output is None else open(args.output, "w")
+    dict_with_model_of_my_text = loading_model_from_file()
+    generating_text(dict_with_model_of_my_text, args.seed, args.length,
+                    args.max_words)
     input.close()
     output.close()
