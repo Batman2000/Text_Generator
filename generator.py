@@ -13,7 +13,7 @@ def loading_model_from_file():
 
 
 def generating_text(dict_with_model_of_my_text, first_word, length,
-                    max_amount_of_words_in_one_paragraph=100):
+                    max_amount_of_words_in_one_paragraph):
     """
     Функция, которая на вход получает первое слово, если оно есть,
     и длину последовательности, на основе этого генерирует
