@@ -4,6 +4,8 @@ import sys
 import random
 import numpy
 import re
+import scipy
+import pandas
 from collections import defaultdict
 
 
