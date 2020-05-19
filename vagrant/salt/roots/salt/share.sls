@@ -15,8 +15,6 @@ install lots from pip:
    pip.installed:
      - names:
        - paramiko
-#       - boto3
-#       - pycurl
 
 numpy:
   pip.installed:
