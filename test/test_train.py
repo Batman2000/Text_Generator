@@ -1,5 +1,3 @@
-from src import train
-
-def test_normalize_empty():
+def test_empty():
     empty_dict = {}
-    train.possibilities_normalization(empty_dict)
+    assert empty_dict == {}
